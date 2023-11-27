@@ -13,6 +13,16 @@ class App extends Component {
     filter: '',
   };
 
+   componentDidMount() {
+    const localData = localStorage.getItem('contacts')
+    if (localData) this.setState({ contacts: JSON.parse(localData) })    
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.contacts.length !== this.state.contacts.length ){
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts))}
+  }
+
   onAddContact = data => {
     const isExist = this.state.contacts.some(contact => {
       return contact.name.toLowerCase() === data.name.toLowerCase();
@@ -49,16 +59,7 @@ class App extends Component {
     });
   };
 
-  componentDidMount() {
-    const localData = localStorage.getItem('contacts')
-    if (localData) this.setState({ contacts: JSON.parse(localData) })
-    else this.setState({ contacts: [] })
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    prevState.contacts && prevState.contacts.length !== this.state.contacts.length &&
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts))
-  }
+  
 
   render() {
     const filteredContacts = this.state.contacts.filter(contact =>
